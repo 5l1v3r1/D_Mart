@@ -4,16 +4,16 @@
 
 ## web , server, database
 
-### Miseok Lee : Client Side
+### Miseok Lee : Database Design, Client Side
 
-### HyunTae Jeong : Database construct, management, Server Side
+### HyunTae Jeong : Database Desgin & Construct & management, Environment setting
 
 
 #### DataBase : Mysql
 
 #### Server : Tomcat
 
-#### Client : Html
+#### Client : Html,JSP
 
 
 ### Used language in this project : mysql, html, java
