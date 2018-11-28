@@ -215,9 +215,43 @@ where I.IName=OL.Order_list and O.Onumber=OL.lOnumber and O.Start_time='2017-10-
 
 
 /--------------------- 트랜잭션 관련 쿼리 ----------------------/
-마트에서 트랜잭션 처리를 헤야할 상황 
--> 제품의 구매 -> 장바구니에 있는걸 주문(오더)구매 할 경우 발생
+마트에서 트랜잭션 처리를 헤야할 상황 : 제품을 구매, 즉 장바구니에 있는 제품을 ORDER(주문)하는 행위
 
+D-MART 시스템에서 주문이 발생했을때 나타나는 시나리오
+
+select Onumber from ORDER_ des limit 1;
+최신 오더넘버를 받아온후 거기에+1을 한다 a=a+1
+
+INSERT INTO ORDER_ VALUES(0,1,"2018-11-28","2018-11-28",a);
+첫번쨰컬럼은 0 고정, 두번쨰컬럼은 유저 아이디의 int값 와 같이 오늘의 날짜를 넣는다.
+
+INSERT INTO ORDER_LIST VALUES (0,1,1,'SOGAsmoothJJIgetofu',9);
+첫번쨰컬럼은 0 고정, 두번쨰 세번쨰에 유저 아이디의 int값, 4번쨰엔 상품이름, 5번쟤엔 상품고유번호를 넣는다.
+
+UPDATE ITEM SET stock=stock-1 WHERE INumber=상품고유번호;
+로 재고를 1감소해주자
+
+ORDER_, ORDER_LIST, ITEM 이 제품 구매시 트렌잭션 처리를 해야할 테이블이다. 
+mysql 에선 트랜잭션 기능을 사용하기 위하연 테이블 엔진이 InnoDB 이어야한다.
+show creat table 로 확인해본 결과
+ORDER_, ORDER_LIST, ITEM 다 InnoDB인걸 확인 할 수 있었다. 즉 따로 엔진변경 쿼리를 날릴 이유는 없다.
+(5.7.24 버전기준으로 확인해본 결과)
+
+격리 수준은 Read commited (level1)로 잡았다.
+이유는 다음과 같다. 구매 조건에서 Dirty Read는 절대 발생해선 안된다. select시 최신 오더넘버를 받아와 작업하기때문에 
+커밋 이전에 다른 트렌젝션이 들어와 select로 최신 오더넘버를 같이 받을 경우 프라이머리키가 중복되는 현상이 발생될 수 있기 때문이다.
+또한 재고를 업데이트 하는 과정 또한 커밋 이후에 다른 트렌젝션이 접근하다록해야 재고가 0이하로 내려가는 불상사(재고도 없는데 물건이 사진다??)
+를 막을 수 있다. Phantom-Read에 대해선 집계연산과 같은 부분이 들어가 있지않고 select 오퍼레이션은 초기에1번만 진행되면 되므로 발생을 허용해주었다.
+Non-Repeatable Read 또한 허용해주었다. select는 한번만 읽어나기 때문이다.
+
+그런 이유로 구매가 일어나는 쿼리에대해 이렇게 하였다.
+
+set tx_isolation = 'READ-COMMITTED';
+select Onumber from ORDER_ des limit 1;
+INSERT INTO ORDER_ VALUES(0,1,"2018-11-28","2018-11-28",a);
+INSERT INTO ORDER_LIST VALUES (0,1,1,'SOGAsmoothJJIgetofu',9);
+UPDATE ITEM SET stock=stock-1 WHERE INumber=상품고유번호;
+commit;
 	
 
 
