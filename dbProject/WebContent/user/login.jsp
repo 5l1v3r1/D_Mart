@@ -9,18 +9,15 @@
 </head>
 <body>
 <% 
-	String serverIP = "localhost";
-	String strSID = "xe";
-	String portNum = "59161";
-	String url = "jdbc:oracle:thin:@"+serverIP+":"+portNum+":"+strSID;
-	String user = "system";
-	String pass = "oracle";
-	
-	Connection conn;
+	Connection conn = null;
 	PreparedStatement pstmt;
 	ResultSet rs;
-	Class.forName("oracle.jdbc.driver.OracleDriver");
-	conn = DriverManager.getConnection(url, user, pass);
+
+	String JDBC_DRIVER="com.mysql.cj.jdbc.Driver";
+	String DB_URL="jdbc:mysql://127.0.0.1:3306/mysql?&userSSL=false";
+	String USER_NAME="min";
+	String PASSWORD="seok";
+	
 	String query = "SELECT CustomerID FROM CUSTOMER WHERE CustomerID = " + request.getParameter("memberID") + " AND Password = " + request.getParameter("password");
 	pstmt = conn.prepareStatement(query);
 	rs = pstmt.executeQuery();

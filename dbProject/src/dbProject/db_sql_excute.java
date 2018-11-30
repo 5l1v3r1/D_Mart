@@ -7,16 +7,16 @@ public class db_sql_excute {
 	{
 		final String JDBC_DRIVER="com.mysql.cj.jdbc.Driver";
 		//final String DB_URL="jdbc:mysql://127.0.0.1:3306/smart?&userSSL=false";
-		final String DB_URL="jdbc:mysql://192.168.125.129:3306/smart?&userSSL=false";
-		final String USER_NAME="hathor888";
-		final String PASSWORD="1234as";
+		final String DB_URL="jdbc:mysql://127.0.0.1:3306/mysql?&userSSL=false";
+		final String USER_NAME="min";
+		final String PASSWORD="seok";
 		ResultSet rs=null;
 		Connection conn=null;
 		Statement state=null;
 		
 		try {
 			Class.forName(JDBC_DRIVER);
-			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD); // error
 			System.out.println("Mysql Connection");
 			state = conn.createStatement();
 			String run_sql=sql;
@@ -26,7 +26,8 @@ public class db_sql_excute {
 			conn.close();
 		}catch(Exception e) {
 			System.err.println(e);
-		}finally {
+		}
+		finally {
 			try {
 				if(state!=null)
 					state.close();

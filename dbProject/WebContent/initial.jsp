@@ -11,10 +11,6 @@
 	response.sendRedirect("user/user_initial.jsp"); 
 %>
 
-<%
-db_sql_excute test=new db_sql_excute();
-String sql="select * from MALL";
-test.do_it(sql);
-%>
+
 </body>
 </html>

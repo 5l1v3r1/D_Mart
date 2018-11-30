@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page language="java" import="java.text.*,java.sql.*" %>
+<%@page import="java.util.ArrayList"%>
+<%@page import="pack.product.ProductBean"%>
+
+<jsp:useBean id="productMgr" class="pack.product.ProductMgr" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,49 +13,56 @@
 <title>Vegetable</title>
 </head>
 <body>
-<% 
-String serverIP = "localhost";
-String strSID = "xe";
-String portNum = "59161";
-String url = "jdbc:oracle:thin:@"+serverIP+":"+portNum+":"+strSID;
-String user = "system";
-String pass = "oracle";
+<form action = "vegetable.jsp" method = "POST">
+	<table style="width: 90%">
+	<tr>
+		<td style ="font-size: 28px">D-MART</td>
+	</tr>
+	</table>
+	
+	<%@include file="user_top.jsp" %>
+	
+	<h3><font face = "Arial">채소 목록</font></h3>
+	
+	<!-- <table>
+	<tr>
+		<td><font face = "Arial">소분류</font></td>
+			<td>
+				<select name = small_category>
+					<option value = "0">선택하세요
+					<option value = "1">고구마/호박고구마/감자 
+					<option value = "2">상추/깻잎/쌈채소 
+					<option value = "3">두부/콩나물 
+				</select>
+			</td>
+	</tr>
+	</table> -->
+<table border = "1">
+<tr style = "text-align: center;">
+ <td><font face = "Arial">상품명</font></td>
+ <td><font face = "Arial">가격</font></td>
+ <td><font face = "Arial">상세보기</font></td>
+</tr>
+<%
+	ArrayList<ProductBean> list = productMgr.getProductAllV(); // productMgr 만들어서 연결은 자바클래스 사용하고 리턴값은 arrayList형태로 하기  
+	
+	for(ProductBean p:list){
+	%>
+	<tr style="text-align: center;">
+		<td><%=p.getIName() %></td>
+		<td><%=p.getPrice() %></td>
 
-Connection conn;
-PreparedStatement pstmt;
-ResultSet rs;
-Class.forName("oracle.jdbc.driver.OracleDriver");
-conn = DriverManager.getConnection(url, user, pass);
-String query = "SELECT * FROM ITEM WHERE Cnum = 0";
-pstmt = conn.prepareStatement(query);
-rs = pstmt.executeQuery();
+		<td><a href="productdetail_user.jsp?number=<%=p.getInumber()%>"><font face = "Arial">보기</font></a></td>
+	</tr>
+	<%	
+	}
+	%>
 
-out.println("<table border=\"1\">");
-ResultSetMetaData rsmd = rs.getMetaData();
-int cnt = rsmd.getColumnCount();
-for(int i = 1; i <= cnt; i++)
-{
-	out.println("<th>" + rsmd.getColumnName(i) + "</th>");
-}
-while(rs.next())
-{
-	out.println("<tr>");
-	
-	SimpleDateFormat sdfDate =new SimpleDateFormat("yyyy-MM-dd");
-	Date mgrStartDate = rs.getDate(1);
-	String strMSDate = sdfDate.format(mgrStartDate);
-	out.println("<td>" + strMSDate + "</td>");
-	
-	out.println("<td>" + rs.getString(2) + "</td>");
-	out.println("<td>" + rs.getString(3) + "</td>");
-	out.println("<td>" + rs.getString(4) + "</td>");
-	
-	
-	out.println("</tr>");
-}
-out.println("</table>");
-pstmt.close();
-%>
+</table>
+</form>
+
+	<%@include file="user_bottom.jsp" %>
+
 
 </body>
 </html>
