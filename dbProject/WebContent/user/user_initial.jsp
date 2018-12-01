@@ -18,8 +18,9 @@
 <table style="width: 90%">
 <% if(memberId != null){%>
 	<tr style="text-align:center;">
-		<td style="background-color:red">
-			<b><font color="white"><b><%= memberId %>님! 방문을 환영합니다.</font><br>
+		<td style="background-color:#FFCC00">
+			<b><font color="white" face = "Arial"><b><%= memberId %>님! 방문을 환영합니다.</font><br>
+			<img src="../imgs/dmart.png" width="100%"/>
 		</td>
 	<tr>
 <%}else{%>

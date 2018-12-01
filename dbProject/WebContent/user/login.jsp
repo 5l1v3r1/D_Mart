@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<%@ page language="java" import="java.text.*,java.sql.*" %>
 <title>Login</title>
 </head>
 <body>
@@ -18,13 +19,20 @@
 	String USER_NAME="min";
 	String PASSWORD="seok";
 	
-	String query = "SELECT CustomerID FROM CUSTOMER WHERE CustomerID = " + request.getParameter("memberID") + " AND Password = " + request.getParameter("password");
+	conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+	
+	String query = "SELECT count(*) FROM CUSTOMER WHERE CID_String = '" + request.getParameter("memberID") + "' AND Password = " + request.getParameter("password");
 	pstmt = conn.prepareStatement(query);
 	rs = pstmt.executeQuery();
+	int cnt = 0;
+	while(rs.next())
+	{
+		cnt = rs.getInt(1);
+	}
 	
-	ResultSetMetaData rsmd = rs.getMetaData();
-	int cnt = rsmd.getColumnCount();
-	
+
+	/* System.out.println("memberID = " + request.getParameter("memberID"));
+	System.out.println("cnt = " + cnt); */
 	if(cnt >= 1)
 	{
 		//login success
@@ -38,9 +46,6 @@
 		response.sendRedirect("login_fail.html");
 	}
 %>
-<%-- <jsp:include page="user_top.jsp“> 
-  <jsp:param name=”data” value=”temp“/> 
-</jsp:include>  --%>
 
 </body>
 </html>

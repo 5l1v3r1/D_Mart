@@ -2,18 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ page language="java" import="java.text.*,java.sql.*" %>
 <%
-/* String serverIP = "localhost";
-String strSID = "xe";
-String portNum = "59161";
-String url = "jdbc:oracle:thin:@"+serverIP+":"+portNum+":"+strSID;
-String user = "system";
-String pass = "oracle";
-
-Connection conn;
-PreparedStatement pstmt;
-ResultSet rs;
-Class.forName("oracle.jdbc.driver.OracleDriver");
-conn = DriverManager.getConnection(url, user, pass); */
 
 String memberId = (String)session.getAttribute("memberId");
 
