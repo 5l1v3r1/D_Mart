@@ -34,6 +34,43 @@ public class ProductMgr {
 		}
 	
 	}
+	public ArrayList<ProductBean> getProductAll(){ 
+		ArrayList<ProductBean> list = new ArrayList<>();
+		try {
+			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			String sql = "select * from ITEM;";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) 
+			{
+				ProductBean bean = new ProductBean();
+				bean.setIDate(rs.getString("idate"));
+				bean.setStock(rs.getInt("stock"));
+				bean.setIName(rs.getString("iname"));
+				bean.setMnum(rs.getInt("mnum"));
+				bean.setInumber(rs.getInt("inumber"));
+				bean.setImporter(rs.getString("importer"));
+				bean.setProducer(rs.getString("producer"));
+				bean.setOrigin(rs.getString("origin"));
+				bean.setP_ID(rs.getInt("p_id"));
+				bean.setCnum(rs.getInt("cnum"));
+				bean.setPrice(rs.getInt("price"));
+				
+				list.add(bean);				
+			}
+		} catch (Exception e) {
+			System.out.println("ProductBean err:" + e);
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}	
+		}
+		return list;
+	}
 	
 	public ArrayList<ProductBean> getProductAllV(){  // 채소 가져오기 
 		ArrayList<ProductBean> list = new ArrayList<>();
@@ -186,7 +223,7 @@ public class ProductMgr {
 		return bean;
 	}
 	
-	public ArrayList<ProductBean> getProducts(String search){  // 과일  가져오기 
+	public ArrayList<ProductBean> getProducts(String search){  
 		ArrayList<ProductBean> list = new ArrayList<>();
 		try {
 			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
@@ -208,6 +245,39 @@ public class ProductMgr {
 				bean.setP_ID(rs.getInt("p_id"));
 				bean.setCnum(rs.getInt("cnum"));
 				bean.setPrice(rs.getInt("price"));
+				
+				list.add(bean);				
+			}
+		} catch (Exception e) {
+			System.out.println("ProductBean err:" + e);
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}	
+		}
+		return list;
+	}
+	
+	public ArrayList<ProductBean> getNoStockProducts(){  
+		ArrayList<ProductBean> list = new ArrayList<>();
+		try {
+			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			String sql = "select IName,INumber,City,Stock from MALL,ITEM where Mnumber = Mnum and Stock<=0;";
+			//System.out.println(sql);
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) 
+			{
+				ProductBean bean = new ProductBean();
+				
+				bean.setCity(rs.getString("city"));
+				bean.setStock(rs.getInt("stock"));
+				bean.setIName(rs.getString("iname"));
+				bean.setInumber(rs.getInt("inumber"));
 				
 				list.add(bean);				
 			}

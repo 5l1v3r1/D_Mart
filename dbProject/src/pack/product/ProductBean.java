@@ -3,8 +3,14 @@ package pack.product;
 public class ProductBean {
 	
 	private int stock, Mnum, Inumber, P_ID, Cnum, price;
-	private String IDate, IName, Importer, Producer, Origin;
+	private String IDate, IName, Importer, Producer, Origin, City;
 	
+	public String getCity() {
+		return City;
+	}
+	public void setCity(String city) {
+		City = city;
+	}
 	public String getIDate() {
 		return IDate;
 	}

@@ -18,29 +18,26 @@ String PASSWORD="seok";
 
 conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
 
-String search = request.getParameter("search");
-
-//System.out.println(search);
-ArrayList<ProductBean> list = productMgr.getProducts(search);
+ArrayList<ProductBean> list = productMgr.getNoStockProducts();
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>검색 결과</title>
+<title>재고가 없는 물품</title>
 
 </head>
 <body>
 <h2><font face = "Arial">상품 상세보기</font></h2>
-<%@include file="user_top.jsp" %>
+<%@include file="admin_top.jsp" %>
 
 <table border = "1">
 <tr style = "text-align: center;">
  <td><font face = "Arial">상품명</font></td>
  <td><font face = "Arial">가격</font></td>
- <td><font face = "Arial">매장번호</font></td>
- <td><font face = "Arial">상세보기</font></td>
+ <td><font face = "Arial">매장지역</font></td>
+ <!-- <td><font face = "Arial">상세보기</font></td> -->
 </tr>
 <%	
 	for(ProductBean p:list){
@@ -48,9 +45,9 @@ ArrayList<ProductBean> list = productMgr.getProducts(search);
 	<tr style="text-align: center;">
 		<td><%=p.getIName() %></td>
 		<td><%=p.getPrice() %></td>
-		<td><%=p.getMnum() %></td>
+		<td><%=p.getCity() %></td>
 
-		<td><a href="productdetail_user.jsp?number=<%=p.getInumber()%>"><font face = "Arial">보기</font></a></td>
+		<%-- <td><a href="../user/productdetail_user.jsp?number=<%=p.getInumber()%>"><font face = "Arial">보기</font></a></td> --%>
 	</tr>
 	<%	
 	}
@@ -58,6 +55,6 @@ ArrayList<ProductBean> list = productMgr.getProducts(search);
 
 </table>
 
-<%@include file="user_bottom.jsp" %>
+<%@include file="admin_bottom.jsp" %>
 </body>
 </html>

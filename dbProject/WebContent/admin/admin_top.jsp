@@ -8,12 +8,12 @@ if(adminId == null){
 }
 %>
 
-<table style="width:80%">
-	<tr>
-		<td><a href="../initial.jsp">홈페이지</a></td>
-		<td><a href="admin_logout.jsp">로그아웃</a></td>
-		<td><a href="member_manage.jsp">회원관리</a></td>
-		<td><a href="product_manage.jsp">상품관리</a></td>
-		<td><a href="order_manage.jsp">주문관리</a></td>
+<table style="width:90%">
+	<tr style="background-color:black; text-align:center;">
+		<td><a href="../initial.jsp"><font color = "white" face = "Arial">홈페이지</font></a></td>
+		<td><a href="admin_logout.jsp"><font color = "white" face = "Arial">로그아웃</font></a></td>
+		<td><a href="nostock_check.jsp"><font color = "white" face = "Arial">재고확인</font></a></td>
+		<td><a href="product_manage.jsp"><font color = "white" face = "Arial">상품관리</font></a></td>
+		<td><a href="order_manage.jsp"><font color = "white" face = "Arial">매출관리</font></a></td>
 	</tr>
 </table>
