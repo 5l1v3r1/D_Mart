@@ -2,7 +2,13 @@ package pack.product;
 
 public class ProductBean {
 	
-	private int stock, Mnum, Inumber, P_ID, Cnum, price;
+	private int stock, Mnum, Inumber, P_ID, Cnum, price, count;
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
 	private String IDate, IName, Importer, Producer, Origin, City;
 	
 	public String getCity() {

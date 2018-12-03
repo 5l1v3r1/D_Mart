@@ -30,7 +30,7 @@ ProductBean bean = productMgr.getProduct(no);
 				<tr><td><font face = "Arial">가격 : </font></td><td><%=bean.getPrice() %></td></tr>
 				<tr><td><font face = "Arial">등록일 : </font></td><td><%=bean.getIDate()%></td></tr>
 				<tr><td><font face = "Arial">재고량 : </font></td><td><%=bean.getStock() %></td></tr>
-				<tr><td><font face = "Arial">매장 번호 : </font></td><td><%=bean.getMnum() %></td></tr>
+				<tr><td><font face = "Arial">매장 : </font></td><td><%=bean.getCity() %></td></tr>
 				<tr><td><font face = "Arial">생산자 : </font></td><td><%=bean.getImporter() %></td></tr>
 				<tr><td><font face = "Arial">생산자 아이디 : </font></td><td><%=bean.getP_ID() %></td></tr>
 				<tr><td><font face = "Arial">원산지 : </font></td><td><%=bean.getOrigin() %></td></tr>
@@ -45,7 +45,8 @@ ProductBean bean = productMgr.getProduct(no);
 				<tr>
 					<td colspan="3" style="text-align: center;">
 						<Br>
-						<input type="hidden" name="product_no" value="<%=bean.getInumber() %>"> <!-- 값을 넘기지만 보이지 않게 -->
+						<input type="hidden" name="product_no" value="<%=bean.getIName() %>"> <!-- 값을 넘기지만 보이지 않게 -->
+						<input type="hidden" name="product_num" value="<%=bean.getInumber() %>">
 						<input type="submit" value="장바구니에 담기">
 						<input type="button" value="이전화면으로" onclick="history.back()">
 					</td>

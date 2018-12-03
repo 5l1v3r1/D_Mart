@@ -28,6 +28,7 @@
 <tr style = "text-align: center;">
  <td><font face = "Arial">상품명</font></td>
  <td><font face = "Arial">가격</font></td>
+ <td><font face = "Arial">매장 번호</font>
  <td><font face = "Arial">상세보기</font></td>
 </tr>
 <%
@@ -38,6 +39,7 @@
 	<tr style="text-align: center;">
 		<td><%=p.getIName() %></td>
 		<td><%=p.getPrice() %></td>
+		<td><%=p.getMnum() %></td>
 
 		<td><a href="productdetail_user.jsp?number=<%=p.getInumber()%>"><font face = "Arial">보기</font></a></td>
 	</tr>

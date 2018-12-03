@@ -42,9 +42,9 @@
 		detail = rs.getString(8);
 	}
 	
-	System.out.println(memberId);
+	/* System.out.println(memberId);
 	System.out.println("pw = " + pw);
-	System.out.println(request.getParameter("passwd1"));
+	System.out.println(request.getParameter("passwd1")); */
 	
 	
 	if(!(request.getParameter("passwd1").equals(Integer.toString(pw))))

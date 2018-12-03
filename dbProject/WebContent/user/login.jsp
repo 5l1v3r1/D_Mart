@@ -30,7 +30,17 @@
 		cnt = rs.getInt(1);
 	}
 	
-
+	
+	query = "SELECT CustomerID FROM CUSTOMER WHERE CID_String = '" + request.getParameter("memberID") + "' AND Password = " + request.getParameter("password");
+	
+	pstmt = conn.prepareStatement(query);
+	rs = pstmt.executeQuery();
+	int cid = 0;
+	while(rs.next())
+	{
+		cid = rs.getInt(1);
+	}
+	
 	/* System.out.println("memberID = " + request.getParameter("memberID"));
 	System.out.println("cnt = " + cnt); */
 	if(cnt >= 1)
@@ -38,6 +48,7 @@
 		//login success
 		String memberId = request.getParameter("memberID");
 		session.setAttribute("memberId", memberId);
+		session.setAttribute("cID", cid);
 		response.sendRedirect("user_initial.jsp");
 	}
 	else

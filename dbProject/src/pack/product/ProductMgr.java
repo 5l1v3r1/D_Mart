@@ -76,7 +76,7 @@ public class ProductMgr {
 		ArrayList<ProductBean> list = new ArrayList<>();
 		try {
 			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-			String sql = "select * from ITEM where Cnum = 1 or Cnum = 2 or Cnum = 3;";
+			String sql = "select * from ITEM where Cnum = 1 or Cnum = 2 or Cnum = 3 order by mnum;";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) 
@@ -93,6 +93,8 @@ public class ProductMgr {
 				bean.setP_ID(rs.getInt("p_id"));
 				bean.setCnum(rs.getInt("cnum"));
 				bean.setPrice(rs.getInt("price"));
+				//bean.setCity(rs.getString("city"));
+				
 				
 				list.add(bean);				
 			}
@@ -114,7 +116,7 @@ public class ProductMgr {
 		ArrayList<ProductBean> list = new ArrayList<>();
 		try {
 			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-			String sql = "select * from ITEM where Cnum = 4 or Cnum = 5 or Cnum = 6;";
+			String sql = "select * from ITEM where Cnum = 4 or Cnum = 5 or Cnum = 6 order by mnum;";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) 
@@ -152,7 +154,7 @@ public class ProductMgr {
 		ArrayList<ProductBean> list = new ArrayList<>();
 		try {
 			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-			String sql = "select * from ITEM where Cnum = 7 or Cnum = 8 or Cnum = 9;";
+			String sql = "select * from ITEM where Cnum = 7 or Cnum = 8 or Cnum = 9 order by mnum;";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) 
@@ -191,7 +193,7 @@ public class ProductMgr {
 		ProductBean bean = null;
 		try {
 			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-			String sql = "select * from ITEM where INumber = " + no;
+			String sql = "select * from ITEM, MALL where INumber = " + no + " and Mnumber = Mnum;";
 			pstmt = conn.prepareStatement(sql);
 			//pstmt.setString(1, no);
 			rs = pstmt.executeQuery();
@@ -208,6 +210,7 @@ public class ProductMgr {
 				bean.setP_ID(rs.getInt("p_id"));
 				bean.setCnum(rs.getInt("cnum"));
 				bean.setPrice(rs.getInt("price"));
+				bean.setCity(rs.getString("city"));
 			}		
 		} catch (Exception e) {
 			System.out.println("getProduct err:" + e);
@@ -294,69 +297,142 @@ public class ProductMgr {
 		}
 		return list;
 	}
-//	public boolean updateProduct(HttpServletRequest request) {
-//		boolean b = false;
-//		try {
-//			String uploadDir ="C:/Users/kitcoop/git/espriter_blog_practice_kic/espriter_blog_bbs/WebContent/data";
-//			//MultipartRequest multi=new MultipartRequest(request, savePath, sizeLimit, new DefaultFileRenamePolicy());
-//			MultipartRequest multi = new MultipartRequest(request, uploadDir, 5*1024*1024, "utf-8", new DefaultFileRenamePolicy());
-//			
-//			conn = ds.getConnection();
-//			
-//			if(multi.getFilesystemName("image") == null) {
-//				String sql ="update shop_product set name=?, price=?, detail=?, stock=? where no=?";
-//				pstmt = conn.prepareStatement(sql);
-//				pstmt.setString(1,multi.getParameter("name"));
-//				pstmt.setString(2,multi.getParameter("price"));
-//				pstmt.setString(3,multi.getParameter("detail"));
-//				pstmt.setString(4,multi.getParameter("stock"));
-//				pstmt.setString(5,multi.getParameter("no"));
-//				
-//			}else {
-//				String sql ="update shop_product set name=?, price=?, detail=?, stock=?, image=? where no=?";
-//				pstmt = conn.prepareStatement(sql);
-//				pstmt.setString(1,multi.getParameter("name"));
-//				pstmt.setString(2,multi.getParameter("price"));
-//				pstmt.setString(3,multi.getParameter("detail"));
-//				pstmt.setString(4,multi.getParameter("stock"));
-//				pstmt.setString(5,multi.getFilesystemName("image"));
-//				pstmt.setString(6,multi.getParameter("no"));
-//			}
-//			if(pstmt.executeUpdate() > 0 ) b = true;			
-//		} catch (Exception e) {
-//			System.out.println("updateProduct err:" + e);
-//		}finally {
-//			try {
-//				if(rs != null) rs.close();
-//				if(pstmt != null) pstmt.close();
-//				if(conn != null) conn.close();
-//			} catch (Exception e2) {
-//				// TODO: handle exception
-//			}	
-//		}
-//	
-//	return b;
-//}
-//	
-//	public void reduceProduct(OrderBean order) {
-//		try {
-//			conn = ds.getConnection();
-//			String sql = "update shop_product set stock=stock - ? where no=?";
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, order.getQuantity());
-//			pstmt.setString(2, order.getProduct_no());
-//			pstmt.executeUpdate();
-//		} catch (Exception e) {
-//			System.out.println("reduceProduct err:" + e);
-//		}finally {
-//			try {
-//				if(rs != null) rs.close();
-//				if(pstmt != null) pstmt.close();
-//				if(conn != null) conn.close();
-//			} catch (Exception e2) {
-//				// TODO: handle exception
-//			}	
-//		}
-//	}
+
+	public ArrayList<ProductBean> getCartlist(String memberId){  
+		ArrayList<ProductBean> list = new ArrayList<>();
+		try {
+			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			String query = "select INumber,Product_list,City from MALL,ITEM,CART_PRODUCT_LIST,CUSTOMER where CID_String='" + memberId + "' and CustomerID=CustomerIden and INumber=Inum_c and Mnumber=Mnum;";
+			
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				ProductBean bean = new ProductBean();
+				
+				bean.setIName(rs.getString("Product_list"));
+				bean.setCity(rs.getString("city"));
+				bean.setInumber(rs.getInt("inumber"));
+				
+				list.add(bean);
+			}
+		
+		} catch (Exception e) {
+			System.out.println("ProductBean err:" + e);
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}	
+		}
+		return list;
+	}
+	
+	public ArrayList<ProductBean> getRecommandList1(){  
+		ArrayList<ProductBean> list = new ArrayList<>();
+		try {
+			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			String query = "select I.IName,count(*) as total from CUSTOMER AS C,ORDER_LIST AS OL ,ITEM AS I where C.Gender = 'boy' and OL.lCustomerIDenti = C.CustomerID and OL.Order_list=I.IName group by I.IName order by total desc limit 5;";
+			
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				ProductBean bean = new ProductBean();
+				
+				bean.setIName(rs.getString(1));
+				bean.setCount(rs.getInt(2));
+				
+				list.add(bean);
+			}
+		
+		} catch (Exception e) {
+			System.out.println("ProductBean err:" + e);
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}	
+		}
+		return list;
+	}
+	
+	public ArrayList<ProductBean> getRecommandList2(){  
+		ArrayList<ProductBean> list = new ArrayList<>();
+		try {
+			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			String query = "select I.IName,count(*) as total \r\n" + 
+					"from CUSTOMER AS C,ORDER_LIST AS OL ,ITEM AS I \r\n" + 
+					"where C.Age BETWEEN 20 and 29 and OL.lCustomerIDenti = C.CustomerID and OL.Order_list=I.IName group by I.IName order by total desc limit 5;";
+			
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				ProductBean bean = new ProductBean();
+				
+				bean.setIName(rs.getString(1));
+				bean.setCount(rs.getInt(2));
+				
+				list.add(bean);
+			}
+		
+		} catch (Exception e) {
+			System.out.println("ProductBean err:" + e);
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}	
+		}
+		return list;
+	}
+	
+	public ArrayList<ProductBean> getRecommandList3(){  
+		ArrayList<ProductBean> list = new ArrayList<>();
+		try {
+			conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+			String query = "select I.IName,count(*) as total \r\n" + 
+					"from CUSTOMER AS C,ORDER_LIST AS OL ,ITEM AS I \r\n" + 
+					"where C.Gender = 'boy'and C.Age BETWEEN 20 and 29 and OL.lCustomerIDenti = C.CustomerID and OL.Order_list=I.IName group by I.IName order by total desc limit 5;";
+			
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				ProductBean bean = new ProductBean();
+				
+				bean.setIName(rs.getString(1));
+				bean.setCount(rs.getInt(2));
+				
+				list.add(bean);
+			}
+		
+		} catch (Exception e) {
+			System.out.println("ProductBean err:" + e);
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}	
+		}
+		return list;
+	}
 	
 }

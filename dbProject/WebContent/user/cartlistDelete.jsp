@@ -11,8 +11,8 @@
 <body>
 <% 
 	String memberId = (String)session.getAttribute("memberId");
-	String iname = request.getParameter("product_no");
-	String inum = request.getParameter("product_num");
+	String inum = request.getParameter("inum");
+	String iname = null;
 
 	//System.out.println(iname);
 	
@@ -40,7 +40,16 @@
 		CustomerID = rs.getInt(2);
 	}
 	
-	query = "INSERT INTO CART_PRODUCT_LIST VALUES('" + iname + "', " + cartID + ", " + CustomerID + ", " + inum + ");"; //
+	query = "select IName from ITEM where Inumber = " + inum + ";";
+	pstmt = conn.prepareStatement(query);
+	rs = pstmt.executeQuery();
+	
+	while(rs.next())
+	{
+		iname = rs.getString(1);
+	}
+	
+	query = "delete from CART_PRODUCT_LIST where Product_list = '" + iname + "' and CartIDe = " + cartID + " and CustomerIDen = " + CustomerID + " and Inum_c = " + inum + ";"; //
 	System.out.println(query);
 	pstmt = conn.prepareStatement(query);
 	pstmt.executeUpdate();
@@ -51,8 +60,8 @@
 %>
 
 	<script type="text/javascript">
-		alert("장바구니에 담겼습니다!");
-		location.href="productlist.jsp"; 
+		alert("삭제되었습니다!");
+		location.href="cartlist.jsp"; 
 	</script>
 </body>
 </html>
