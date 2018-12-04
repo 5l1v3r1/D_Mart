@@ -1681,6 +1681,7 @@ alter table CUSTOMER MODIFY COLUMN Password varchar(20) not null;
 ALTER TABLE CART_PRODUCT_LIST ADD Inum_c int ;
 ALTER TABLE ORDER_LIST ADD Inum_o int ;
 
+
 select City,Order_list from ORDER_LIST,CUSTOMER,MALL,ITEM where CID_String='user1' and lCustomerIDenti = CustomerID and Mnumber=lMno;
 
 
@@ -1690,4 +1691,7 @@ INSERT INTO CART_PRODUCT_LIST VALUES ('SOGAsmoothJJIgetofu',1, 1,9);
 INSERT INTO ORDER_ VALUES(0,1,"2018-11-28","2018-11-28",173);
 INSERT INTO ORDER_LIST VALUES (0,1,1,'SOGAsmoothJJIgetofu',9);
 
+alter table ORDER_LIST ADD Onum_ol int;
 
+alter table CART_PRODUCT_LIST drop primary key;
+alter table CART_PRODUCT_LIST add constraint primary key (Product_list,CartIDe,CustomerIDen,Inum_c);
