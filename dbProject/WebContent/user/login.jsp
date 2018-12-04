@@ -21,7 +21,7 @@
 	
 	conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
 	
-	String query = "SELECT count(*) FROM CUSTOMER WHERE CID_String = '" + request.getParameter("memberID") + "' AND Password = " + request.getParameter("password");
+	String query = "SELECT count(*) FROM CUSTOMER WHERE CID_String = '" + request.getParameter("memberID") + "' AND Password = '" + request.getParameter("password") + "';";
 	pstmt = conn.prepareStatement(query);
 	rs = pstmt.executeQuery();
 	int cnt = 0;
@@ -31,7 +31,7 @@
 	}
 	
 	
-	query = "SELECT CustomerID FROM CUSTOMER WHERE CID_String = '" + request.getParameter("memberID") + "' AND Password = " + request.getParameter("password");
+	query = "SELECT CustomerID FROM CUSTOMER WHERE CID_String = '" + request.getParameter("memberID") + "' AND Password = '" + request.getParameter("password") + "';";
 	
 	pstmt = conn.prepareStatement(query);
 	rs = pstmt.executeQuery();

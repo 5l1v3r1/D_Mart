@@ -19,11 +19,12 @@
 	
 	/* String inum = request.getParameter("product_number");
 	String iname = request.getParameter("product_name"); */
-	String iname = request.getParameter("iname");
-	String inum = null;
+	String inumber = request.getParameter("inumber");
+	String iname = null;
 	
-	System.out.println(iname);
-	int cid = (int)session.getAttribute("cID");
+	//System.out.println(iname);
+	int cid = 0;
+	String cname = (String)session.getAttribute("memberId");
 
 	
 	Connection conn = null;
@@ -36,7 +37,10 @@
 	String PASSWORD="seok";
 	
 	conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-	
+	//trasaction set 
+	conn.setTransactionIsolation(java.sql.Connection.TRANSACTION_READ_COMMITTED);
+	conn.setAutoCommit(false);
+	//---
 	String query = "select count(Onumber) from ORDER_;";
 	
 	int Onum = 0, a;
@@ -55,28 +59,76 @@
 	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
 	String today = simpleDate.format(date);
 	//System.out.println(today);
-	
-	query = "select INumber from ITEM where IName = \"" + iname+ "\";";
+	query = "select CustomerID from CUSTOMER where CID_String = \"" +  cname + "\";";
 	pstmt = conn.prepareStatement(query);
 	rs = pstmt.executeQuery();
 	
 	while(rs.next())
 	{
-		inum = rs.getString(1);
+		cid = rs.getInt(1);
 	}
-	System.out.println(inum);
 	
-	
-	query = "INSERT INTO ORDER_ VALUES(0," + cid + ",\"" + today + "\",\"" + today + "\"," + a + ");";
-	//System.out.println(query);
+	query = "select IName from ITEM where INumber = " + inumber + ";";
 	pstmt = conn.prepareStatement(query);
-	pstmt.executeUpdate();
+	rs = pstmt.executeQuery();
 	
-	query = "INSERT INTO ORDER_LIST VALUES(0," + cid + ", " + cid + ", '" + iname + "', " + inum + ");";
+	while(rs.next())
+	{
+		iname = rs.getString(1);
+	}
+	//System.out.println(iname);
+	
+	//재고 확인
+	query = "select Stock from ITEM where IName = '" + iname + "' and INumber = " + inumber + ";";
+	System.out.println(iname);
+	System.out.println(inumber);
+	
 	pstmt = conn.prepareStatement(query);
-	pstmt.executeUpdate();
-	//System.out.println(memberId);
+	rs = pstmt.executeQuery();
+	int stock = 0;
+	while(rs.next())
+	{
+		stock = rs.getInt(1);
+	}
+	System.out.println(stock);
 	
+	if(stock <= 0)
+	{
+		conn.setTransactionIsolation(1);
+		%>
+		<script type="text/javascript">
+		alert("재고가 부족합니다!");
+		location.href="cartlist.jsp"; 
+		</script>
+		<%
+	}
+	else
+	{
+		/* query = "set tx_isolation = 'READ-COMMITTED';";
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate(); */
+		
+		query = "INSERT INTO ORDER_ VALUES(0," + cid + ",\"" + today + "\",\"" + today + "\"," + a + ");";
+		System.out.println(query);
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
+		
+		query = "INSERT INTO ORDER_LIST VALUES(0," + cid + ", " + a + ", '" + iname + "', " + inumber + " ," + a + ");";
+		System.out.println(query);
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
+		
+		query = "UPDATE ITEM SET stock = stock-1 WHERE INumber=" + inumber + ";";
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
+		
+		/* query = "commit;";
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate(); */
+		//http://jijs.tistory.com/entry/트랜잭션-격리레벨-테슽
+		conn.commit();
+	}
+	conn.close();
 	
 %>
 

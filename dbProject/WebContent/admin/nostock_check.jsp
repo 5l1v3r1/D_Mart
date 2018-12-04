@@ -35,7 +35,7 @@ ArrayList<ProductBean> list = productMgr.getNoStockProducts();
 <table border = "1">
 <tr style = "text-align: center;">
  <td><font face = "Arial">상품명</font></td>
- <td><font face = "Arial">가격</font></td>
+ <td><font face = "Arial">재고</font></td>
  <td><font face = "Arial">매장지역</font></td>
  <!-- <td><font face = "Arial">상세보기</font></td> -->
 </tr>
@@ -44,7 +44,7 @@ ArrayList<ProductBean> list = productMgr.getNoStockProducts();
 	%>
 	<tr style="text-align: center;">
 		<td><%=p.getIName() %></td>
-		<td><%=p.getPrice() %></td>
+		<td><%=p.getStock() %></td>
 		<td><%=p.getCity() %></td>
 
 		<%-- <td><a href="../user/productdetail_user.jsp?number=<%=p.getInumber()%>"><font face = "Arial">보기</font></a></td> --%>

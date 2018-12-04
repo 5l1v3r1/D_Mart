@@ -27,23 +27,53 @@
 	
 	conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
 	
-	String query = "select CartID,CustomerIDe from CART ,CUSTOMER where CustomerIDe=CustomerID and CID_String='" + memberId + "';";
+	String query = "select CustomerID from CUSTOMER where CID_String='" + memberId + "';";
+	
 	
 	int cartID = 0, CustomerID = 0;
+	//System.out.println(memberId);
 	
 	pstmt = conn.prepareStatement(query);
 	rs = pstmt.executeQuery();
 	
 	while(rs.next())
 	{
-		cartID = rs.getInt(1);
-		CustomerID = rs.getInt(2);
+		CustomerID = rs.getInt(1);
+	}
+	/* System.out.println(cartID);
+	System.out.println(CustomerID); */
+	cartID = CustomerID;
+	
+	int c = 0;
+	query = "select count(*) from CART_PRODUCT_LIST where Product_list = '" + iname + "' and CartIDe = " + cartID + " and CustomerIDen = " + CustomerID + " and Inum_c = " + inum + ";";   
+	pstmt = conn.prepareStatement(query);
+	rs = pstmt.executeQuery();
+	
+	while(rs.next())
+	{
+		c = rs.getInt(1);
+	}
+	System.out.println(c);
+	if(c > 0)
+	{
+		c = 0;
+		%>
+		<script type="text/javascript">
+		alert("이미 담긴 상품입니다!");
+		location.href="productlist.jsp"; 
+		</script>
+		
+		<%
+	}
+	else
+	{
+		query = "INSERT INTO CART_PRODUCT_LIST VALUES('" + iname + "', " + cartID + ", " + CustomerID + ", " + inum + ");"; //
+		System.out.println(query);
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
 	}
 	
-	query = "INSERT INTO CART_PRODUCT_LIST VALUES('" + iname + "', " + cartID + ", " + CustomerID + ", " + inum + ");"; //
-	System.out.println(query);
-	pstmt = conn.prepareStatement(query);
-	pstmt.executeUpdate();
+	
 	
 	//System.out.println(memberId);
 	

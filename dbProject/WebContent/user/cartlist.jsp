@@ -44,7 +44,7 @@
 		<%-- <input type="hidden" name="product_number" value="<%=p.getInumber() %>">
 		<input type="hidden" name="product_name" value="<%=p.getIName() %>">
 		<td><input type = "submit" value = "구매하기"></td> --%>
-		<td><a href="orderproc.jsp?iname=<%=p.getIName()%>"><font face = "Arial">구매하기</font></a></td>
+		<td><a href="orderproc.jsp?inumber=<%=p.getInumber()%>"><font face = "Arial">구매하기</font></a></td>
 		<td><a href="cartlistDelete.jsp?inum=<%=p.getInumber()%>"><font face = "Arial">삭제하기</font></a></td>
 	</tr>
 	

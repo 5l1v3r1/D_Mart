@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page language="java" import="java.text.*,java.sql.*" %>
+<%@page import="java.util.Date" %>
+<%@page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +21,10 @@
 	String PASSWORD="seok";
 	
 	conn=DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
+	
+	Date date = new Date();
+	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+	String today = simpleDate.format(date);
 	
 	String query = "select CustomerID from CUSTOMER order by CustomerID desc limit 1;";
 	int cid = 0;
@@ -46,12 +52,19 @@
 	}
 	else
 	{
-		query = "insert into CUSTOMER VALUES ("+ cid + ", " + request.getParameter("passwd") + ", " + request.getParameter("age") + ", '" + request.getParameter("gender") + "', '" + request.getParameter("phone") + "', '" + request.getParameter("job") + "', '" + request.getParameter("roadname_address") + "', '" + request.getParameter("detailed_address") + "', '" + request.getParameter("id") + "');";
+		query = "insert into CUSTOMER VALUES (" + cid + ", '" + request.getParameter("passwd") + "', " + request.getParameter("age") + ", '" + request.getParameter("gender") + "', '" + request.getParameter("phone") + "', '" + request.getParameter("job") + "', '" + request.getParameter("roadname_address") + "', '" + request.getParameter("detailed_address") + "', '" + request.getParameter("id") + "');";
 		//System.out.println(query);
 		pstmt = conn.prepareStatement(query);
 		pstmt.executeUpdate();
+		
+		query="insert into CART VALUES(\"" + today + "\", " + cid + ", " + cid + ");";
+		System.out.println(query);
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
+		
+		response.sendRedirect("user_initial.jsp");
 	}
-	
+	//
 	
 	
 %>
