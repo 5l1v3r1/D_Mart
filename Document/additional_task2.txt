@@ -36,3 +36,51 @@ INSERT INTO ORDER_ VALUES(0,1,"2018-11-28","2018-11-28",a);
 INSERT INTO ORDER_LIST VALUES (0,1,1,'SOGAsmoothJJIgetofu',9);
 UPDATE ITEM SET stock=stock-1 WHERE INumber=상품고유번호;
 commit;
+
+이는 orderproc.jsp에서 이렇게 구현되었다.
+
+//transaction level 을 설정해준다.
+	conn.setTransactionIsolation(java.sql.Connection.TRANSACTION_READ_COMMITTED);
+	conn.setAutoCommit(false);
+	
+	//--------query---------------//
+	
+		..... 코드들.....쫘르륵
+	if(stock <= 0)
+	{
+		//재고가 없을시 커밋을 완료한다.
+		conn.commit();
+		%>
+		<script type="text/javascript">
+		alert("재고가 부족합니다!");
+		location.href="cartlist.jsp"; 
+		</script>
+		<%
+	}
+	else
+	{
+		/* query = "set tx_isolation = 'READ-COMMITTED';";
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate(); */
+		
+		query = "INSERT INTO ORDER_ VALUES(0," + cid + ",\"" + today + "\",\"" + today + "\"," + a + ");";
+		System.out.println(query);
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
+		
+		query = "INSERT INTO ORDER_LIST VALUES(0," + cid + ", " + a + ", '" + iname + "', " + inumber + " ," + a + ");";
+		System.out.println(query);
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
+		
+		query = "UPDATE ITEM SET stock = stock-1 WHERE INumber=" + inumber + ";";
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate();
+		
+		/* query = "commit;";
+		pstmt = conn.prepareStatement(query);
+		pstmt.executeUpdate(); */
+		//커밋을 완료한다.
+		conn.commit();
+	}
+	conn.close();
